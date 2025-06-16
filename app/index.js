@@ -8,17 +8,17 @@ app.get("/", (req, res) => {
     res.json({
         message: "Welcome to the performance test service",
         endpoints: [
-            { method: "GET", path: "/fibonacci?n=<number>" },
+            { method: "GET", path: "/fibonacci/:n" },
             { method: "GET", path: "/bubble-sort?n=<number>" },
         ],
     });
 });
 
 // ---------------------------- FIBONACCI
-const service = axios.create({ baseURL: process.env.SERVICE_URL });
+const service = axios.create({ baseURL: process.env.APP_URL });
 
-app.get("/fibonacci", async (req, res) => {
-    const n = +req.query.n;
+app.get("/fibonacci/:n", async (req, res) => {
+    const n = +req.params.n;
 
     if (n == 1 || n == 2) {
         res.json({ fibonacci: 1 });
@@ -27,8 +27,8 @@ app.get("/fibonacci", async (req, res) => {
 
     const start = new Date();
 
-    const nMinusOneRequest = service.get(`/fibonacci?n=${n - 1}`);
-    const nMinusTwoRequest = service.get(`/fibonacci?n=${n - 2}`);
+    const nMinusOneRequest = service.get(`/fibonacci/${n - 1}`);
+    const nMinusTwoRequest = service.get(`/fibonacci/${n - 2}`);
 
     const fibonacci =
         (await nMinusOneRequest).data.fibonacci +
@@ -82,5 +82,5 @@ const PORT = 8080;
 
 app.listen(PORT, () => {
     console.log(`started at ${PORT}`);
-    console.log(`service url ${process.env.SERVICE_URL}`);
+    console.log(`app url ${process.env.APP_URL}`);
 });

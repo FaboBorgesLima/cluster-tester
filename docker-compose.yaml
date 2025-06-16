@@ -1,7 +1,7 @@
 services:
   app:
     build:
-      context: .
+      context: ./app/
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
@@ -10,6 +10,13 @@ services:
     develop:
       watch:
         - action: rebuild
-          path: .
+          path: app/
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    restart: always
+  ssh:
+    build:
+      context: ./ssh/
+      dockerfile: Dockerfile
+    ports:
+      - "2222:22"
