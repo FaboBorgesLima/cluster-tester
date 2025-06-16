@@ -26,3 +26,14 @@ class TestCase(ABC):
     
     def get_description(self) -> str:
         return self._description
+    def to_json(self) -> dict:
+        """
+        Converts the TestCase instance to a JSON-serializable dictionary.
+        :return: A dictionary representation of the TestCase.
+        """
+        return {
+            "name": self._name,
+            "description": self._description,
+            "application_base_url": self._application_base_url,
+            "min_recommended_load": self._min_recommended_load
+        }

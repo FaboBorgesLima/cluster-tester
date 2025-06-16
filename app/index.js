@@ -19,13 +19,12 @@ const service = axios.create({ baseURL: process.env.APP_URL });
 
 app.get("/fibonacci/:n", async (req, res) => {
     const n = +req.params.n;
+    const start = new Date();
 
     if (n == 1 || n == 2) {
-        res.json({ fibonacci: 1 });
+        res.json({ fibonacci: 1, start: start, end: new Date() });
         return;
     }
-
-    const start = new Date();
 
     const nMinusOneRequest = service.get(`/fibonacci/${n - 1}`);
     const nMinusTwoRequest = service.get(`/fibonacci/${n - 2}`);

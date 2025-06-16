@@ -27,3 +27,21 @@ class TestResult:
 
     def __repr__(self):
         return f"TestResult(test_case_name={self.test_case_name}, load={self.load}, request_span={self.request_span}, server_processing_span={self.server_processing_span})"
+    
+    def to_json(self) -> dict:
+        """
+        Converts the TestResult instance to a JSON-serializable dictionary.
+        :return: A dictionary representation of the TestResult.
+        """
+        return {
+            "test_case_name": self.test_case_name,
+            "load": self.load,
+            "request_span": {
+                "start": self.request_span.start.isoformat(),
+                "end": self.request_span.end.isoformat()
+            },
+            "server_processing_span": {
+                "start": self.server_processing_span.start.isoformat(),
+                "end": self.server_processing_span.end.isoformat()
+            }
+        }
