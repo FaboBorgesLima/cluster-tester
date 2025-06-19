@@ -1,0 +1,18 @@
+{
+    "app": {
+        "name": "Aplication Server",
+        "url": "http://localhost:8080"
+    },
+    "monitorServers": [
+        {
+            "name": "Server 1",
+            "host": "localhost",
+            "port": 2222,
+            "sshAuthMethod": "password",
+            "authentication": {
+                "username": "root",
+                "password": "root"
+            }
+        }
+    ]
+}

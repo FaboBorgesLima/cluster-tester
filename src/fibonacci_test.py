@@ -13,7 +13,7 @@ class FibonacciTest(TestCase):
         :param application_base_url: The base URL of the application to test.
         """
         super().__init__(
-            name="Fibonacci Test",
+            name="FibonacciTestCase",
             description="This test measures the performance of the Fibonacci calculation endpoint.",
             application_base_url=application_base_url,
         )

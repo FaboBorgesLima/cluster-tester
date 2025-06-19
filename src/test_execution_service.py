@@ -5,9 +5,18 @@ from test_execution import TestExecution
 from test_result import TestResult
 from datetime import datetime
 from timespan import Timespan
-import math
+from cluster_service import ClusterService
+from cluster import Cluster
+from background_cluster_monitoring import BackgroundClusterMonitoring 
 
 class TestExecutionService:
+    def __init__(self, cluster_service: ClusterService):
+        """
+        Initializes the TestExecutionService with a ClusterService instance.
+        :param cluster_service: An instance of ClusterService to manage cluster statistics.
+        """
+        self.cluster_service = cluster_service
+
     async def execute_test(self, tests_per_second: int, duration_seconds: int, load: int, test_case: TestCase) -> TestExecution:
         
         running_results = []
@@ -17,7 +26,7 @@ class TestExecutionService:
         requests_to_send = tests_per_second * duration_seconds
 
         start_execution_time = datetime.now()
-
+        print(f"Starting test execution for {test_case.get_name()} with {tests_per_second} requests per second, duration {duration_seconds} seconds, and load {load}.")
         for sended_requests in range(requests_to_send):
             # Calculate the absolute time this request should be sent
             target_time = start_execution_time.timestamp() + interval * (sended_requests + 1)
@@ -62,18 +71,78 @@ class TestExecutionService:
         return await self.execute_test(
             tests_per_second=test_execution.request_per_second,
             duration_seconds=test_execution.seconds_making_requests,
-            load=test_execution.results[0].load if test_execution.results else 0,
+            load=test_execution.get_load() if test_execution.get_load() else 0,
             test_case=test_execution.test_case
         )
+    
+    async def run_while_monitoring(
+        self, 
+        test_case: TestCase,
+        request_per_second: int,
+        duration_seconds: int,
+        load: int,
+        monitoring_interval: float,
+        cluster: Cluster
+    ) -> TestExecution:
 
-    async def find_max_acceptable_load(self, test_case: TestCase, request_per_second: int, duration_seconds: int, max_avg_response_time: float, load_increment: int = 1, max_iterations: int = 100) -> TestExecution:
+        monitoring = BackgroundClusterMonitoring(
+            cluster_service=self.cluster_service,
+            cluster=cluster
+        )
+        monitoring_task = asyncio.create_task(monitoring.run(monitoring_interval))
+        execution = await self.execute_test(
+            tests_per_second=request_per_second,
+            duration_seconds=duration_seconds,
+            load=load,
+            test_case=test_case
+        )
+        await monitoring.stop()
+        await monitoring_task
+        execution.cluster_stats = monitoring.stats
+        return execution
+
+    async def rerun_while_monitoring(
+        self, 
+        test_execution: TestExecution,
+        monitoring_interval:float,
+        cluster: Cluster)-> TestExecution:
+    
+        monitoring = BackgroundClusterMonitoring(
+            cluster_service=self.cluster_service,
+            cluster=cluster
+        )
+
+        monitoring_task = asyncio.create_task(monitoring.run(monitoring_interval))
+
+
+
+        rerun = await self.rerun_test(test_execution)
+        await monitoring.stop()
+        await monitoring_task
+
+        rerun.cluster_stats = monitoring.stats
+
+        return rerun
+
+    async def find_max_acceptable_load(
+            self, 
+            test_case: TestCase, 
+            request_per_second: int, 
+            duration_seconds: int, 
+            max_avg_response_time: float, 
+            load_increment: int = 1, 
+            max_iterations: int = 100,
+            rest_time: int = 0
+            ) -> TestExecution:
         
         load = 1
         last_execution = None
         for _ in range(max_iterations):
             logging.info(f"Testing with load {load} and {request_per_second} requests per second.")
             try:
+                await asyncio.sleep(rest_time) if rest_time > 0 else None
                 execution = await self.execute_test(request_per_second, duration_seconds, load, test_case)
+                
             except Exception as e:
                 logging.error(f"Error during test execution: {e}")
                 if last_execution:
@@ -81,12 +150,12 @@ class TestExecutionService:
                     return last_execution
                 raise e
             
-            avg_result = execution.avg_response_time()
+            avg_result = execution.avg_response_time() if execution.results else float('inf')
             
             logging.info(f"Average result: {avg_result}")
 
 
-            if avg_result > max_avg_response_time:
+            if avg_result > max_avg_response_time or execution.has_errors():
                 logging.info(f"Exceeded max average response time with load: {load} requests per second.")
                 return last_execution if last_execution else execution
             
@@ -97,7 +166,14 @@ class TestExecutionService:
 
         return await self.execute_test(request_per_second, duration_seconds, load, test_case)
     async def find_max_requests_per_second(
-        self, test_case: TestCase, load: int, duration_seconds: int = 1, max_avg_response_time: float = 2.0, max_power: int = 10, start_power: int = 0
+        self, 
+        test_case: TestCase, 
+        load: int, 
+        duration_seconds: int = 1, 
+        max_avg_response_time: float = 2.0, 
+        max_power: int = 10, 
+        start_power: int = 0,
+        rest_time: int = 0
     ) -> TestExecution:
         """
         Finds the maximum requests per second that can be made without exceeding the maximum average response time.
@@ -106,6 +182,8 @@ class TestExecutionService:
         :param duration_seconds: The duration of the test in seconds.
         :param max_avg_response_time: The maximum average response time allowed.
         :param max_power: The maximum power of two to test.
+        :param start_power: The starting power of two to test.
+        :param rest_time: The time to rest between tests, in seconds.
         :return: A TestExecution object containing the results of the test with the maximum requests per second that does not exceed the max average response time.
         """
         return await self.__find_max_requests_per_second_aux(
@@ -114,7 +192,9 @@ class TestExecutionService:
             load=load,
             duration_seconds=duration_seconds,
             max_power=max_power,
-            start_power=start_power
+            start_power=start_power,
+            retries=10,
+            rest_time=rest_time
         )
 
     async def __find_max_requests_per_second_aux(
@@ -124,7 +204,8 @@ class TestExecutionService:
         duration_seconds: int = 1, 
         max_power: int = 10,
         start_power: int = 0, 
-        retries: int = 10
+        retries: int = 10,
+        rest_time: int = 0
     ) -> TestExecution:
         """
         Finds the maximum requests per second that can be made without exceeding the maximum average response time.
@@ -138,7 +219,12 @@ class TestExecutionService:
         start_execution_time = datetime.now()
 
         test_power_of_two = await self.__test_powers_of_two_requests_until_exceeds_max_avg_response_time(
-            test_case, max_avg_response_time, load, duration_seconds, max_power, start_power=start_power
+            test_case, 
+            max_avg_response_time, 
+            load, duration_seconds, 
+            max_power, 
+            start_power=start_power, 
+            rest_time=rest_time
         )
         
         if not test_power_of_two:
@@ -155,18 +241,23 @@ class TestExecutionService:
         last_power_two_execution = test_power_of_two[-1]
 
         # Use binary search to find the maximum requests per second
-        lower_bound = int(2**(math.log2(last_power_two_execution.request_per_second) - 1))
+        lower_bound = 1
         upper_bound = last_power_two_execution.request_per_second
         execution_results = []
 
+        await asyncio.sleep(rest_time) if rest_time > 0 else None
+        execution = await self.execute_test(lower_bound, duration_seconds, load, test_case)
+        execution_results.append(execution)
+
         while lower_bound < upper_bound:
             mid = (lower_bound + upper_bound + 1) // 2
-            logging.info(f"Testing with {mid} requests per second.")
 
+            await asyncio.sleep(rest_time) if rest_time > 0 else None
             execution = await self.execute_test(mid, duration_seconds, load, test_case)
+            
             execution_results.append(execution)
 
-            if execution.avg_response_time() > max_avg_response_time:
+            if (execution.avg_response_time() if execution.results else float('inf')) > max_avg_response_time:
                 upper_bound = mid - 1
             else:
                 lower_bound = mid
@@ -181,7 +272,8 @@ class TestExecutionService:
             if not retries:
                 logging.error(f"Error finding biggest execution: {e}")
                 raise e
-            logging.warning(f"Retrying to find biggest execution due to error: {e}. Retries left: {retries - 1}")
+            
+            logging.warning(f"Retrying to find biggest execution due to error: {e}. Load: {load}. Retries left: {retries - 1}")
             return await self.__find_max_requests_per_second_aux(
                 test_case=test_case,
                 max_avg_response_time=max_avg_response_time,
@@ -203,7 +295,13 @@ class TestExecutionService:
         )
 
     async def __test_powers_of_two_requests_until_exceeds_max_avg_response_time(
-        self, test_case: TestCase, max_avg_response_time: float, load: int, duration_seconds: int = 1, max_power: int = 10,start_power: int = 0
+        self, test_case: TestCase,
+        max_avg_response_time: float,
+        load: int, 
+        duration_seconds: int = 1, 
+        max_power: int = 10, 
+        start_power: int = 0,
+        rest_time: int = 0
     ) -> list[TestExecution]:
         """
         Requests powers of two until the average response time exceeds the maximum allowed.
@@ -220,13 +318,16 @@ class TestExecutionService:
             tests_per_second = 2 ** power_of_two
             logging.info(f"Testing with {tests_per_second} tests per second.")
 
+            await asyncio.sleep(rest_time) if rest_time > 0 else None
+
             execution = await self.execute_test(tests_per_second, duration_seconds, load, test_case)
+
             test_executions.append(execution)
-            logging.info(f"Execution: {execution}")
-            avg_result = execution.avg_response_time()
+            
+            avg_result =  execution.avg_response_time() if execution.results else float('inf')
             logging.info(f"Average result: {avg_result}")
 
-            if avg_result > max_avg_response_time:
+            if avg_result > max_avg_response_time or execution.has_errors():
                 logging.info(f"Exceeded max average response time with {tests_per_second} tests per second.")
                 return test_executions
 
@@ -258,8 +359,9 @@ class TestExecutionService:
             if avg_result < max_avg_response_time:
                 if not biggest_execution or avg_result > biggest_execution.avg_response_time():
                     biggest_execution = execution
+        test_executions.sort(key=lambda x: x.avg_response_time(), reverse=True)
 
         if not biggest_execution:
-            raise ValueError("No test execution found with average response time lower than the maximum allowed.")
-        
+            raise ValueError(f"No test execution found with average response time lower than the maximum allowed, min response time was {test_executions[-1].avg_response_time()} seconds with {test_executions[-1].request_per_second} requests per second.")
+
         return biggest_execution
