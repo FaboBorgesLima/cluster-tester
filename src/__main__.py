@@ -38,6 +38,7 @@ benchmark_service = BenchmarkService(
 )
 
 async def main():
+    
     # Example usage
     cluster = Cluster(
         name=config_data['app']['name'],
