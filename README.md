@@ -21,8 +21,15 @@ activate the virtual environment:
 source .venv/bin/activate
 ```
 
+configure the application:
+
+```bash
+cp db/config_example.json db/config.json
+nano db/config.json
+```
+
 run main.py:
 
 ```bash
-python main.py
+python3 src/main.py
 ```

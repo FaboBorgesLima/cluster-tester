@@ -50,6 +50,40 @@ async def main():
 
     bubble_sort_test = BubbleSortTest(application_base_url=config_data['app']['url'])
     fibonacci_test = FibonacciTest(application_base_url=config_data['app']['url'])
+    # do not commit this
+    fibonacci_tests = []
+    
+    fibonacci_tests.append(await test_execution_service.run_while_monitoring(
+        test_case=fibonacci_test,
+        cluster=cluster,
+        duration_per_test=30,
+        monitoring_interval=0.5,
+        load=16,
+        request_per_second=1,
+    ))
+    asyncio.sleep(30)
+    fibonacci_tests.append(await test_execution_service.run_while_monitoring(
+        test_case=fibonacci_test,
+        cluster=cluster,
+        duration_per_test=30,
+        monitoring_interval=0.5,
+        load=15,
+        request_per_second=2,
+    ))
+    fibonacci_tests.append(await test_execution_service.run_while_monitoring(
+        test_case=fibonacci_test,
+        cluster=cluster,
+        duration_per_test=30,
+        monitoring_interval=0.5,
+        load=14,
+        request_per_second=4,
+    ))
+    storage_service.save(
+        file_name=f"{datetime.now().strftime('%Y%m%d_%H%M%S')}_fibonacci_tests.json",
+        data=[test.to_short_json() for test in fibonacci_tests]  # Save the tests in a short JSON format
+    )
+    print("done")
+    #
 
     benchmark = await benchmark_service.run_benchmark(
         test_cases=[fibonacci_test, bubble_sort_test],
