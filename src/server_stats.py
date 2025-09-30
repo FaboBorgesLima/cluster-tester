@@ -26,7 +26,7 @@ class ServerStats:
                 "available": self.memory["available"] + other.memory["available"]
             },
             stats={
-                'cpu': (self.stats['cpu'] + other.stats['cpu']),
+                'cpu': (self.stats['cpu']),
                 'usr': (self.stats['usr'] + other.stats['usr']),
                 'nice': (self.stats['nice'] + other.stats['nice']),
                 'sys': (self.stats['sys'] + other.stats['sys']),

@@ -22,12 +22,12 @@ class FibonacciTest(TestCase):
         async with httpx.AsyncClient(timeout=30.0) as client:
             start_request = datetime.datetime.now(datetime.timezone.utc)
             logging.debug(f"Starting request to {self._application_base_url}/fibonacci/{load} with load {load}")
-            response = await client.get(f'{self._application_base_url}/fibonacci/{load}')  # Example endpoint
+            response = await client.get(f'{self._application_base_url}/fibonacci/{load}')  # Example endpoint  
             logging.debug(f"Received response: {response.status_code} for load {load}")
             end_request = datetime.datetime.now(datetime.timezone.utc)
             start_server = datetime.datetime.fromisoformat(response.json().get('start'))
             end_server = datetime.datetime.fromisoformat(response.json().get('end'))
-
+            
             return TestResult(
                 test_case_name=self.get_name(),
                 request_span=Timespan(start_request, end_request),

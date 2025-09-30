@@ -75,7 +75,7 @@ class TestExecutionService:
             test_case=test_execution.test_case
         )
     
-    async def run_while_monitoring(
+    async def execute_test_while_monitoring(
         self, 
         test_case: TestCase,
         request_per_second: int,

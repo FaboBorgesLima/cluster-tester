@@ -1,9 +1,18 @@
 # Server benchmarking tool
 
+This is a server benchmarking tool that allows you to test the performance of your server by simulating various workloads and measuring response times, throughput, and other performance metrics.
+
+## Quickstart
+
 start virtual environment:
 
 ````bash
 python3 -m venv .venv
+```
+
+source venv:
+```bash
+source .venv/bin/activate
 ```
 
 install dependencies:
@@ -28,8 +37,8 @@ cp db/config_example.json db/config.json
 nano db/config.json
 ```
 
-run main.py:
+run help:
 
 ```bash
-python3 src/main.py
+python3 src/ --help
 ```
