@@ -1,11 +1,10 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: DaemonSet
 metadata:
-    name: server-benchmark-app
+    name: server-benchmark-daemonset
     labels:
         app: server-benchmark
 spec:
-    replicas: 3
     selector:
         matchLabels:
             app: server-benchmark
@@ -15,10 +14,27 @@ spec:
                 app: server-benchmark
         spec:
             containers:
-                - name: server-benchmark-app
+                - name: server-benchmark-container
                   image: faboborgeslima/server-benchmark-app:v1.0.0
                   ports:
                       - containerPort: 8080
                   env:
                       - name: APP_URL
-                        value: "http://server-benchmark-app:8080"
+                        value: "http://server-benchmark-service:80"
+
+            restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: server-benchmark-service
+    labels:
+        app: server-benchmark
+spec:
+    selector:
+        app: server-benchmark
+    ports:
+        - protocol: TCP
+          port: 80
+          targetPort: 8080
+    type: LoadBalancer
