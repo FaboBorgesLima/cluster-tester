@@ -211,9 +211,9 @@ kubectl get svc server-benchmark-service
 EXTERNAL_IP=$(kubectl get svc server-benchmark-service -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 
 # Test endpoints
-curl http://$EXTERNAL_IP/
-curl http://$EXTERNAL_IP/fibonacci/10
-curl "http://$EXTERNAL_IP/bubble-sort?n=1024"
+curl http://\$EXTERNAL_IP/
+curl http://\$EXTERNAL_IP/fibonacci/10
+curl "http://\$EXTERNAL_IP/bubble-sort?n=1024"
 ```
 
 ## Advanced Configuration

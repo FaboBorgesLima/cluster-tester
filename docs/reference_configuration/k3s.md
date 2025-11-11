@@ -33,7 +33,7 @@ mkdir -p ~/.kube
 
 # Copy K3s kubeconfig
 sudo cp /etc/rancher/k3s/k3s.yaml ~/.kube/config
-sudo chown $USER:$USER ~/.kube/config
+sudo chown \$USER:\$USER ~/.kube/config
 
 # Test kubectl access
 kubectl get nodes
@@ -174,12 +174,12 @@ kubectl get svc server-benchmark-service
 # Get external IP (should be from MetalLB pool)
 EXTERNAL_IP=$(kubectl get svc server-benchmark-service -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 
-echo "Service available at: http://$EXTERNAL_IP"
+echo "Service available at: http://\$EXTERNAL_IP"
 
 # Test the endpoints
-curl http://$EXTERNAL_IP/
-curl http://$EXTERNAL_IP/fibonacci/10
-curl "http://$EXTERNAL_IP/bubble-sort?n=1024"
+curl http://\$EXTERNAL_IP/
+curl http://\$EXTERNAL_IP/fibonacci/10
+curl "http://\$EXTERNAL_IP/bubble-sort?n=1024"
 ```
 
 ## Advanced Configuration
