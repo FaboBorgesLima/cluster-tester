@@ -20,6 +20,9 @@ class TestCase(ABC):
         """
         pass
 
+    def get_min_recommended_load(self) -> int:
+        return self._min_recommended_load
+
 
     def get_name(self) -> str:
         return self._name

@@ -16,9 +16,11 @@ class FibonacciTest(TestCase):
             name="FibonacciTestCase",
             description="This test measures the performance of the Fibonacci calculation endpoint.",
             application_base_url=application_base_url,
+            min_recommended_load=10
         )
 
     async def run(self, load: int) -> TestResult:
+        load = max(1, load)  # Ensure load is non-negative
         async with httpx.AsyncClient(timeout=30.0) as client:
             start_request = datetime.datetime.now(datetime.timezone.utc)
             logging.debug(f"Starting request to {self._application_base_url}/fibonacci/{load} with load {load}")

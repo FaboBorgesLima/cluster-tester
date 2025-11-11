@@ -134,8 +134,8 @@ class TestExecutionService:
             max_iterations: int = 100,
             rest_time: int = 0
             ) -> TestExecution:
-        
-        load = 1
+    
+        load = test_case.get_min_recommended_load()
         last_execution = None
         for _ in range(max_iterations):
             logging.info(f"Testing with load {load} and {request_per_second} requests per second.")

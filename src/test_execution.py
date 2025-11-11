@@ -53,6 +53,8 @@ class TestExecution:
         :return: The load used for the test execution.
         """
         if not self.results:
+            if self.errors:
+                raise ValueError(f"No test results available to determine load. But test execution encountered errors: {self.errors}")
             raise ValueError("No test results available to determine load.")
         
         return self.results[0].load

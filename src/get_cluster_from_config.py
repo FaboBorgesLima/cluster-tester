@@ -18,4 +18,4 @@ def get_cluster_from_config(config)-> Cluster:
         )
         servers.append(server)
 
-    return Cluster(name=config['app']['name'], servers=servers)
+    return Cluster(name=config['app']['name'], servers=servers, config=config)
