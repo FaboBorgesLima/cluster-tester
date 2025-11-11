@@ -25,7 +25,6 @@ extensions = [
     'sphinx.ext.intersphinx',
     'sphinx.ext.todo',
     'sphinx.ext.coverage',
-    'myst_parser',
     'sphinx_rtd_theme',
 ]
 
@@ -117,7 +116,7 @@ myst_enable_extensions = [
 # Source file suffixes
 source_suffix = {
     '.rst': None,
-    '.md': 'myst_parser',
+    '.md': None,
 }
 
 # Master document

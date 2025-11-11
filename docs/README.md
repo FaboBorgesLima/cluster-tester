@@ -133,7 +133,7 @@ The documentation supports both reStructuredText and Markdown:
 # conf.py
 source_suffix = {
     '.rst': None,
-    '.md': 'myst_parser',
+    '.md': ,
 }
 ```
 
