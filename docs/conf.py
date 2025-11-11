@@ -65,6 +65,21 @@ html_css_files = [
     'custom.css',
 ]
 
+# -- Options for linkcheck builder ----------------------------------------
+linkcheck_ignore = [
+    r'http://\${.*}',  # Ignore shell variable URLs
+    r'https://\${.*}', # Ignore shell variable URLs  
+    r'http://\$.*',    # Ignore shell variable URLs (without braces)
+    r'https://\$.*',   # Ignore shell variable URLs (without braces)
+    r'.*localhost.*',  # Ignore localhost URLs
+    r'.*127\.0\.0\.1.*',  # Ignore local IPs
+    r'.*192\.168\..*', # Ignore local network IPs
+    r'.*10\..*',       # Ignore private network IPs
+]
+linkcheck_anchors = False  # Don't check anchors
+linkcheck_timeout = 10     # 10 second timeout
+linkcheck_retries = 2      # Try twice before failing
+
 # -- Extension configuration -------------------------------------------------
 
 # Napoleon settings for Google and NumPy style docstrings

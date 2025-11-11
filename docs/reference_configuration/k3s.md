@@ -4,7 +4,10 @@ K3s is a lightweight Kubernetes distribution designed for IoT and edge computing
 
 ## Prerequisites
 
--   Linux distribution (Ubuntu, CentOS, RHEL, etc.)
+-   Linux distribution (Ubuntu, CentOS, RHEL,#echo "Service available at: http://${EXTERNAL_IP}"Test the endpoints
+curl "http://${EXTERNAL_IP}/"
+    curl "http://${EXTERNAL_IP}/fibonacci/10"
+curl "http://${EXTERNAL_IP}/bubble-sort?n=1024".)
 -   At least 512MB RAM
 -   Network connectivity between nodes
 -   Root or sudo access

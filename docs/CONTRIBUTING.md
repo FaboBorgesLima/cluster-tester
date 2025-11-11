@@ -157,7 +157,7 @@ Brief description of the issue
 ## Environment
 
 -   OS: [e.g., Ubuntu 20.04]
--   Python: [e.g., 3.9.0]
+-   Python: [e.g., 3.12.0]
 -   Cluster Tester Version: [e.g., 1.2.0]
 
 ## Steps to Reproduce

@@ -167,8 +167,8 @@ microk8s kubectl get svc server-benchmark-service
 EXTERNAL_IP=$(microk8s kubectl get svc server-benchmark-service -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 
 # Test endpoints
-curl http://$EXTERNAL_IP/
-curl http://$EXTERNAL_IP/fibonacci/10
+curl "http://${EXTERNAL_IP}/"
+curl "http://${EXTERNAL_IP}/fibonacci/10"
 ```
 
 ## Troubleshooting
