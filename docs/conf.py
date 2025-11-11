@@ -71,6 +71,8 @@ linkcheck_ignore = [
     r'https://\${.*}', # Ignore shell variable URLs  
     r'http://\$.*',    # Ignore shell variable URLs (without braces)
     r'https://\$.*',   # Ignore shell variable URLs (without braces)
+    r'http:/*' ,      # Ignore incomplete URLs
+    r'https:/*',      # Ignore incomplete URLs
     r'.*localhost.*',  # Ignore localhost URLs
     r'.*127\.0\.0\.1.*',  # Ignore local IPs
     r'.*192\.168\..*', # Ignore local network IPs
