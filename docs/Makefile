@@ -20,8 +20,6 @@ api-docs:
 # Clean build directory
 clean:
 	rm -rf $(BUILDDIR)/*
-	rm -rf api/cluster_tester*.rst
-	rm -rf api/modules.rst
 
 # Build HTML documentation
 html:

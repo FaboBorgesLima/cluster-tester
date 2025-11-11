@@ -1,11 +1,6 @@
 # Configuration file for the Sphinx documentation builder.
-#
 # For the full list of built-in configuration values, see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
-
-import os
-import sys
-sys.path.insert(0, os.path.abspath('../src'))
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
@@ -16,7 +11,6 @@ author = 'Cluster Tester Contributors'
 release = '1.0.0'
 
 # -- General configuration ---------------------------------------------------
-# https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = [
     'sphinx.ext.autodoc',
@@ -26,65 +20,69 @@ extensions = [
     'sphinx.ext.todo',
     'sphinx.ext.coverage',
     'sphinx_rtd_theme',
+    'myst_parser',
+    'sphinxcontrib.mermaid',
+]
+
+# MyST parser configuration
+myst_enable_extensions = [
+    "colon_fence",
+    "deflist", 
+    "html_admonition",
+    "html_image",
+    "replacements",
+    "smartquotes",
+    "substitution",
+    "tasklist",
+]
+
+# MyST heading anchors
+myst_heading_anchors = 2
+
+# Source file parsers - let MyST auto-register
+source_suffix = ['.rst', '.md']
+
+# Set the master document
+master_doc = 'index'
+
+# Suppress warnings
+suppress_warnings = [
+    'myst.xref_missing',
+    'toc.not_included',
+    'config.cache',
+    'app.add_source_suffix',
 ]
 
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 # -- Options for HTML output -------------------------------------------------
-# https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
 
-# Theme options are theme-specific and customize the look and feel of a theme
+# Theme options
 html_theme_options = {
     'canonical_url': '',
     'analytics_id': '',
     'logo_only': False,
-    'display_version': True,
     'prev_next_buttons_location': 'bottom',
     'style_external_links': False,
     'vcs_pageview_mode': '',
-    'style_nav_header_background': '#2980B9',
-    # Toc options
-    'collapse_navigation': True,
+    'style_nav_header_background': '#2980b9',
+    'collapse_navigation': False,
     'sticky_navigation': True,
     'navigation_depth': 4,
     'includehidden': True,
     'titles_only': False
 }
 
-# Add any paths that contain custom static files (such as style sheets) here,
-# relative to this directory. They are copied after the builtin static files,
-# so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
-
 # Custom CSS
 html_css_files = [
     'custom.css',
 ]
 
-# -- Options for linkcheck builder ----------------------------------------
-linkcheck_ignore = [
-    r'http://\${.*}',  # Ignore shell variable URLs
-    r'https://\${.*}', # Ignore shell variable URLs  
-    r'http://\$.*',    # Ignore shell variable URLs (without braces)
-    r'https://\$.*',   # Ignore shell variable URLs (without braces)
-    r'http:/*' ,      # Ignore incomplete URLs
-    r'https:/*',      # Ignore incomplete URLs
-    r'.*localhost.*',  # Ignore localhost URLs
-    r'.*127\.0\.0\.1.*',  # Ignore local IPs
-    r'.*192\.168\..*', # Ignore local network IPs
-    r'.*10\..*',       # Ignore private network IPs
-]
-linkcheck_anchors = False  # Don't check anchors
-linkcheck_timeout = 10     # 10 second timeout
-linkcheck_retries = 2      # Try twice before failing
-
-# -- Extension configuration -------------------------------------------------
-
-# Napoleon settings for Google and NumPy style docstrings
+# Napoleon settings
 napoleon_google_docstring = True
 napoleon_numpy_docstring = True
 napoleon_include_init_with_doc = False
@@ -96,9 +94,11 @@ napoleon_use_admonition_for_references = False
 napoleon_use_ivar = False
 napoleon_use_param = True
 napoleon_use_rtype = True
-napoleon_preprocess_types = False
-napoleon_type_aliases = None
-napoleon_attr_annotations = True
+
+# Intersphinx mapping
+intersphinx_mapping = {
+    'python': ('https://docs.python.org/3/', None),
+}
 
 # Todo extension
 todo_include_todos = True
@@ -112,42 +112,16 @@ autodoc_default_options = {
     'exclude-members': '__weakref__'
 }
 
-# MyST parser settings
-myst_enable_extensions = [
-    "amsmath",
-    "attrs_inline", 
-    "colon_fence",
-    "deflist",
-    "dollarmath",
-    "fieldlist",
-    "html_admonition",
-    "html_image",
-    "linkify",
-    "replacements",
-    "smartquotes",
-    "strikethrough",
-    "substitution",
-    "tasklist",
+# Link check configuration
+linkcheck_ignore = [
+    r'http://localhost.*',
+    r'https://localhost.*',
 ]
 
-# Source file suffixes
-source_suffix = {
-    '.rst': None,
-    '.md': None,
+# MathJax configuration
+mathjax3_config = {
+    'tex': {
+        'inlineMath': [['$', '$'], ['\\(', '\\)']],
+        'displayMath': [['$$', '$$'], ['\\[', '\\]']],
+    }
 }
-
-# Master document
-master_doc = 'index'
-
-# Language
-language = 'en'
-
-# List of patterns, relative to source directory, that match files and
-# directories to ignore when looking for source files.
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', '**.ipynb_checkpoints']
-
-# The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'sphinx'
-
-# If true, `todo` and `todoList` produce output, else they produce nothing.
-todo_include_todos = True

@@ -8,7 +8,6 @@ Welcome to the Cluster Tester documentation! This tool helps you benchmark and a
 
 README
 EXAMPLES
-TROUBLESHOOTING
 ```
 
 ```{toctree}
@@ -35,12 +34,14 @@ API_REFERENCE
 CONTRIBUTING
 ```
 
+<!-- Temporarily disabled until API docs are fixed
 ```{toctree}
 :maxdepth: 2
 :caption: API Documentation
 
 api/modules
 ```
+-->
 
 ## Quick Start
 
@@ -65,12 +66,12 @@ python3 src/ benchmark
 
 ## Features
 
-- **🏗️ Distributed Load Testing**: Test applications across multiple servers simultaneously
-- **📊 Real-time Monitoring**: Monitor CPU, RAM, and network performance during tests  
-- **🧮 Adaptive Load Discovery**: Automatically find optimal performance characteristics
-- **📈 Comprehensive Analysis**: Generate detailed reports with statistical visualizations
-- **☸️ Kubernetes Integration**: Built-in support for K3s, K0s, and MicroK8s
-- **🔧 Flexible Configuration**: JSON-based configuration for easy setup
+-   **🏗️ Distributed Load Testing**: Test applications across multiple servers simultaneously
+-   **📊 Real-time Monitoring**: Monitor CPU, RAM, and network performance during tests
+-   **🧮 Adaptive Load Discovery**: Automatically find optimal performance characteristics
+-   **📈 Comprehensive Analysis**: Generate detailed reports with statistical visualizations
+-   **☸️ Kubernetes Integration**: Built-in support for K3s, K0s, and MicroK8s
+-   **🔧 Flexible Configuration**: JSON-based configuration for easy setup
 
 ## Architecture Overview
 
@@ -79,17 +80,17 @@ graph TB
     CLI[CLI Interface] --> BS[Benchmark Service]
     CLI --> TES[Test Execution Service]
     CLI --> DAS[Data Analysis Service]
-    
+
     BS --> TES
     TES --> TC[Test Cases]
     TES --> CS[Cluster Service]
-    
+
     CS --> SSH[SSH Monitoring]
     TC --> HTTP[HTTP Client]
-    
+
     DAS --> VIZ[Visualizations]
     DAS --> STATS[Statistics]
-    
+
     SSH --> SERVERS[Target Servers]
     HTTP --> APP[Test Application]
 ```
@@ -98,8 +99,8 @@ graph TB
 
 ### Built-in Test Cases
 
-- **Fibonacci Test**: Recursive computation performance (exponential complexity)
-- **Bubble Sort Test**: Array sorting performance (quadratic complexity)
+-   **Fibonacci Test**: Recursive computation performance (exponential complexity)
+-   **Bubble Sort Test**: Array sorting performance (quadratic complexity)
 
 ### Custom Test Cases
 
@@ -117,17 +118,16 @@ class MyCustomTest(TestCase):
 
 ## Supported Platforms
 
-- **Operating Systems**: Linux (Ubuntu, CentOS, RHEL, etc.)
-- **Python Versions**: 3.8+
-- **Kubernetes Distributions**: K3s, K0s, MicroK8s
-- **Container Platforms**: Docker, Podman
+-   **Operating Systems**: Linux (Ubuntu, CentOS, RHEL, etc.)
+-   **Python Versions**: 3.8+
+-   **Kubernetes Distributions**: K3s, K0s, MicroK8s
+-   **Container Platforms**: Docker, Podman
 
 ## Getting Help
 
-- **📖 Documentation**: Start with this documentation
-- **🐛 Issues**: Report bugs on [GitHub Issues](https://github.com/your-repo/issues)
-- **💬 Discussions**: Join discussions on [GitHub Discussions](https://github.com/your-repo/discussions)
-- **📧 Support**: Check the [troubleshooting guide](TROUBLESHOOTING.md)
+-   **📖 Documentation**: Start with this documentation
+-   **🐛 Issues**: Report bugs on [GitHub Issues](https://github.com/FaboBorgesLima/cluster-tester/issues)
+-   **💬 Discussions**: Join discussions on [GitHub Discussions](https://github.com/FaboBorgesLima/cluster-tester/discussions)
 
 ## License
 
@@ -135,6 +135,6 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Indices and Tables
 
-* {ref}`genindex`
-* {ref}`modindex`
-* {ref}`search`
+-   {ref}`genindex`
+-   {ref}`modindex`
+-   {ref}`search`
