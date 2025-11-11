@@ -34,14 +34,12 @@ API_REFERENCE
 CONTRIBUTING
 ```
 
-<!-- Temporarily disabled until API docs are fixed
 ```{toctree}
 :maxdepth: 2
 :caption: API Documentation
 
 api/modules
 ```
--->
 
 ## Quick Start
 
