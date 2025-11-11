@@ -54,7 +54,6 @@ source .venv/bin/activate
 
 # Install development dependencies
 pip install -r requirements.txt
-pip install -r requirements-dev.txt  # If exists
 
 # Install in development mode
 pip install -e .
