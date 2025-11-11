@@ -84,13 +84,6 @@ napoleon_preprocess_types = False
 napoleon_type_aliases = None
 napoleon_attr_annotations = True
 
-# Intersphinx mapping
-intersphinx_mapping = {
-    'python': ('https://docs.python.org/3/', None),
-    'httpx': ('https://www.python-httpx.org/', None),
-    'asyncio': ('https://docs.python.org/3/library/asyncio.html', None),
-}
-
 # Todo extension
 todo_include_todos = True
 
