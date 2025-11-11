@@ -121,6 +121,11 @@ autodoc_default_options = {
 linkcheck_ignore = [
     r'http://localhost.*',
     r'https://localhost.*',
+    # Ignore redirects that are expected
+    r'https://www.sphinx-doc.org/$',
+    r'https://sphinx-rtd-theme.readthedocs.io/$',
+    r'https://myst-parser.readthedocs.io/$',
+    r'https://readthedocs.org/$',
 ]
 
 # MathJax configuration

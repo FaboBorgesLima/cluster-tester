@@ -1,6 +1,6 @@
 # Cluster Tester Documentation
 
-This directory contains the comprehensive documentation for the Cluster Tester project, built using [Sphinx](https://www.sphinx-doc.org/) with the [Read the Docs theme](https://sphinx-rtd-theme.readthedocs.io/).
+This directory contains the comprehensive documentation for the Cluster Tester project, built using [Sphinx](https://www.sphinx-doc.org/en/master/) with the [Read the Docs theme](https://sphinx-rtd-theme.readthedocs.io/en/stable/).
 
 ## 📖 Documentation Structure
 
@@ -251,7 +251,7 @@ To publish on GitHub Pages:
 
 ### Read the Docs
 
-To publish on [Read the Docs](https://readthedocs.org/):
+To publish on [Read the Docs](https://about.readthedocs.com/):
 
 1. **Connect your GitHub repository** to Read the Docs
 2. **Configure build settings**:
@@ -333,9 +333,9 @@ Common warnings and fixes:
 
 ## 📚 Resources
 
--   [Sphinx Documentation](https://www.sphinx-doc.org/)
--   [Read the Docs Theme](https://sphinx-rtd-theme.readthedocs.io/)
--   [MyST Parser](https://myst-parser.readthedocs.io/) (Markdown support)
+-   [Sphinx Documentation](https://www.sphinx-doc.org/en/master/)
+-   [Read the Docs Theme](https://sphinx-rtd-theme.readthedocs.io/en/stable/)
+-   [MyST Parser](https://myst-parser.readthedocs.io/en/latest/) (Markdown support)
 -   [reStructuredText Primer](https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html)
 -   [Sphinx Extensions](https://www.sphinx-doc.org/en/master/usage/extensions/index.html)
 

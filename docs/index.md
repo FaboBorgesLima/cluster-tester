@@ -125,7 +125,7 @@ class MyCustomTest(TestCase):
 
 -   **📖 Documentation**: Start with this documentation
 -   **🐛 Issues**: Report bugs on [GitHub Issues](https://github.com/FaboBorgesLima/cluster-tester/issues)
--   **💬 Discussions**: Join discussions on [GitHub Discussions](https://github.com/FaboBorgesLima/cluster-tester/discussions)
+-   **💬 Support**: Get help via [GitHub Issues](https://github.com/FaboBorgesLima/cluster-tester/issues)
 
 ## License
 
