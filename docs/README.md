@@ -1,350 +1,153 @@
 # Cluster Tester Documentation
 
-This directory contains the comprehensive documentation for the Cluster Tester project, built using [Sphinx](https://www.sphinx-doc.org/en/master/) with the [Read the Docs theme](https://sphinx-rtd-theme.readthedocs.io/en/stable/).
+This directory contains the comprehensive documentation for the **Cluster Tester** project - a powerful tool for benchmarking and analyzing the performance of distributed server applications across multiple Kubernetes cluster environments.
 
-## 📖 Documentation Structure
+## Purpose of this project
 
-```
-docs/
-├── conf.py                     # Sphinx configuration
-├── index.rst                   # Main documentation index
-├── Makefile                    # Build automation (Unix)
-├── make.bat                    # Build automation (Windows)
-├── requirements.txt            # Documentation dependencies
-├── _static/                    # Static files (CSS, images)
-│   └── custom.css             # Custom styling
-├── _templates/                 # Custom templates (auto-created)
-├── api/                       # Auto-generated API documentation
-│   ├── modules.rst
-│   └── cluster_tester.rst
-└── reference_configuration/   # Kubernetes setup guides
-    ├── k3s.md                 # K3s installation and configuration
-    ├── k0s.md                 # K0s installation and configuration
-    └── microk8s.md           # MicroK8s installation and configuration
-```
+The Cluster Tester project provides a comprehensive testing framework for Kubernetes clusters, enabling users to validate their cluster configurations, compare different Kubernetes distributions (K3s, K0s, MicroK8s), and ensure optimal performance under various load conditions. It helps DevOps engineers and system administrators make informed decisions about their infrastructure choices.
 
 ## 🚀 Quick Start
 
-### Prerequisites
-
-Install the documentation dependencies:
+Get started with Cluster Tester in just a few commands:
 
 ```bash
-# From the root project directory
-pip install -r docs/requirements.txt
+# Set up environment
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+python3 src --help
 ```
 
-### Building Documentation
+## 📋 Key Features Documented
 
-```bash
-# Navigate to docs directory
-cd docs/
+The documentation covers all major Cluster Tester capabilities:
 
-# Generate API documentation and build HTML
-make clean && make api-docs && make html
+### Core Functionality
 
-# Or build everything at once
-make all
+-   **Distributed Load Testing**: Test applications across multiple servers simultaneously
+-   **Real-time Monitoring**: Monitor CPU, RAM, and network performance during tests
+-   **Multiple Test Cases**: Built-in Fibonacci and Bubble Sort computational tests
+-   **Comprehensive Analysis**: Generate detailed reports with visualizations
 
-# Open documentation in browser
-make html-open
-```
+### Kubernetes Support
 
-### Development Mode
+-   **Multi-Distribution Testing**: Compare K3s, K0s, and MicroK8s performance
+-   **Easy Deployment**: Deploy test applications to Kubernetes clusters
+-   **Flexible Configuration**: JSON-based configuration for easy setup
 
-For live-reloading during documentation development:
+### Analysis & Reporting
 
-```bash
-# Start development server with auto-reload
-make livehtml
+-   **Performance Metrics**: CPU usage, memory consumption, response times
+-   **Visual Analytics**: Charts and graphs for performance comparison
+-   **Statistical Analysis**: Mean, median, percentile analysis
 
-# Documentation will be available at http://localhost:8000
-# Changes to .rst/.md files will trigger automatic rebuilds
-```
+## 📝 What You'll Find in the Documentation
 
-## 📋 Available Build Targets
+### Getting Started Guides
 
-| Command          | Description                                 |
-| ---------------- | ------------------------------------------- |
-| `make html`      | Build HTML documentation                    |
-| `make html-open` | Build HTML and open in browser              |
-| `make livehtml`  | Start development server with auto-reload   |
-| `make latexpdf`  | Build PDF documentation (requires LaTeX)    |
-| `make api-docs`  | Generate API documentation from source code |
-| `make clean`     | Clean build directory                       |
-| `make check`     | Run documentation tests and link checking   |
-| `make all`       | Clean, generate API docs, and build HTML    |
+-   **[Main README](../README.md)**: Complete project overview and quick start
+-   **[Examples](EXAMPLES.md)**: Step-by-step tutorials and practical examples
+-   **[Architecture](ARCHITECTURE.md)**: Understanding how Cluster Tester works
 
-## 📝 Documentation Files
+### Configuration Guides
 
-### Core Documentation
+-   **[K3s Setup](reference_configuration/k3s.md)**: Lightweight Kubernetes with MetalLB
+-   **[K0s Setup](reference_configuration/k0s.md)**: Zero-friction Kubernetes configuration
+-   **[MicroK8s Setup](reference_configuration/microk8s.md)**: Ubuntu's Kubernetes distribution
 
--   **[README.md](../README.md)**: Main project documentation
--   **[EXAMPLES.md](EXAMPLES.md)**: Practical usage examples
--   **[API_REFERENCE.md](API_REFERENCE.md)**: Detailed API reference
--   **[ARCHITECTURE.md](ARCHITECTURE.md)**: System architecture overview
--   **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)**: Common issues and solutions
--   **[CONTRIBUTING.md](CONTRIBUTING.md)**: Development and contribution guide
+### Reference Materials
 
-### Kubernetes Configuration Guides
+-   **[API Reference](API_REFERENCE.md)**: Complete Python API documentation
+-   **[Contributing Guide](CONTRIBUTING.md)**: How to contribute to the project
+-   **Auto-Generated API Docs**: Python module documentation in `api/` directory
 
--   **[k3s.md](reference_configuration/k3s.md)**: K3s setup with MetalLB
--   **[k0s.md](reference_configuration/k0s.md)**: K0s setup with MetalLB
--   **[microk8s.md](reference_configuration/microk8s.md)**: MicroK8s setup with MetalLB
+### Performance Testing Workflows
 
-### Auto-Generated API Documentation
+The documentation includes comprehensive guides for:
 
-The API documentation is automatically generated from Python docstrings using Sphinx's `autodoc` extension:
+1. **Setting up test environments** across different Kubernetes distributions
+2. **Running benchmarks** with various load parameters
+3. **Analyzing results** with statistical comparisons and visualizations
+4. **Comparing infrastructure performance** between different setups
 
--   **[modules.rst](api/modules.rst)**: API modules overview
--   **[cluster_tester.rst](api/cluster_tester.rst)**: Detailed API reference
+## ⚙️ Understanding the Test Framework
 
-## ⚙️ Sphinx Configuration
+### Test Cases Available
 
-### Key Configuration Options
+**Fibonacci Test**: Tests recursive computation performance
 
-The documentation is configured in [`conf.py`](conf.py) with the following key settings:
+-   Tests CPU-intensive workloads
+-   Exponential complexity scaling
+-   Ideal for CPU performance comparison
 
--   **Theme**: `sphinx_rtd_theme` (Read the Docs theme)
--   **Extensions**:
-    -   `sphinx.ext.autodoc` - Automatic API documentation
-    -   `sphinx.ext.napoleon` - Google/NumPy style docstrings
-    -   `sphinx.ext.viewcode` - Source code links
-    -   `myst_parser` - Markdown support
--   **Source Formats**: Both reStructuredText (`.rst`) and Markdown (`.md`)
+**Bubble Sort Test**: Tests array sorting performance
 
-### Custom Styling
+-   Memory and CPU intensive operations
+-   O(n²) complexity characteristics
+-   Good for memory bandwidth testing
 
-Custom CSS is defined in [`_static/custom.css`](/_static/custom.css) and includes:
+### Performance Metrics Tracked
 
--   Improved code block styling
--   Better table formatting
--   Enhanced admonition (note/warning) styling
--   Responsive design improvements
--   Print-friendly styles
+The framework automatically collects:
 
-## 📖 Writing Documentation
+-   **Response Times**: End-to-end request latency
+-   **Server Processing**: Actual computation time
+-   **CPU Usage**: System and user CPU utilization per server
+-   **Memory Usage**: RAM consumption across cluster nodes
+-   **Network Latency**: Ping times and network performance
 
-### File Formats
+### Getting Help
 
-The documentation supports both reStructuredText and Markdown:
+For questions about using Cluster Tester:
 
-```python
-# conf.py
-source_suffix = {
-    '.rst': None,
-    '.md': ,
-}
-```
+-   **Check the documentation**: Start with [EXAMPLES](EXAMPLES.md) for common scenarios
+-   **Review configuration guides**: Kubernetes-specific setup in `reference_configuration/`
+-   **File an issue**: Report bugs or request features on GitHub
+-   **Read the API docs**: Complete Python API reference in `api/` directory
 
-### Adding New Pages
+### Improving Documentation
 
-1. **Create the documentation file** (`.rst` or `.md`)
-2. **Add to table of contents** in `index.rst`:
+Found something unclear or missing? The documentation improves with community input:
 
-    ````rst
-    ```{toctree}
-    :maxdepth: 2
+-   Submit documentation fixes via pull requests
+-   Request new examples or guides by filing issues
+-   Suggest improvements to existing content
 
-    your-new-page
-    ````
+## 📚 Additional Resources
 
-3. **Rebuild documentation**: `make html`
+### Learning More About Cluster Testing
 
-### Docstring Style
+-   **Kubernetes Performance**: Understanding cluster performance characteristics
+-   **Load Testing Best Practices**: Effective strategies for distributed testing
+-   **Infrastructure Comparison**: Methodologies for comparing K8s distributions
+-   **Monitoring and Observability**: Understanding performance metrics
 
-Use Google-style docstrings for automatic API documentation:
+### Related Tools and Frameworks
 
-```python
-async def execute_test(self, tests_per_second: int, duration_seconds: int,
-                      load: int, test_case: TestCase) -> TestExecution:
-    """Execute a performance test with specified parameters.
+-   **K6**: JavaScript-based load testing (alternative approach)
+-   **Apache Bench**: Simple HTTP server testing
+-   **Kubernetes Benchmarking**: Other cluster performance tools
+-   **Prometheus + Grafana**: Production monitoring stack
 
-    Args:
-        tests_per_second: Number of requests to send per second
-        duration_seconds: How long to run the test
-        load: Load parameter to pass to test case
-        test_case: TestCase instance to execute
+For detailed technical information, start with the [main project README](../README.md) and explore the hands-on [examples](EXAMPLES.md).
 
-    Returns:
-        TestExecution object containing results and timing information
+## 🤝 Contributing to the Project
 
-    Raises:
-        ValueError: If tests_per_second is less than or equal to zero
-        ConnectionError: If unable to connect to test target
+The Cluster Tester documentation is part of an open-source project that welcomes contributions:
 
-    Example:
-        >>> service = TestExecutionService(cluster_service)
-        >>> test_case = FibonacciTest("http://localhost:8080")
-        >>> result = await service.execute_test(
-        ...     tests_per_second=10,
-        ...     duration_seconds=30,
-        ...     load=15,
-        ...     test_case=test_case
-        ... )
-    """
-```
+### How to Contribute
 
-## 🔧 Advanced Features
+1. **Improve documentation clarity** - Make instructions easier to follow
+2. **Add real-world examples** - Share your testing scenarios and configurations
+3. **Update configuration guides** - Keep Kubernetes setup instructions current
+4. **Fix issues you encounter** - Help others avoid the same problems
+5. **Expand test coverage** - Document edge cases and advanced usage
 
-### Cross-References
+### Documentation Guidelines
 
-Link to other documentation sections:
+-   **Focus on practical usage** - Provide copy-paste examples that work
+-   **Test your documentation** - Ensure instructions actually work
+-   **Include expected outputs** - Show what success looks like
+-   **Cover troubleshooting** - Document common issues and solutions
 
-```rst
-See the :doc:`EXAMPLES` for practical usage examples.
-See :ref:`installation-guide` for setup instructions.
-```
-
-### Code Highlighting
-
-Specify language for syntax highlighting:
-
-```rst
-.. code-block:: python
-   :linenos:
-
-   async def example_function():
-       return "Hello World"
-```
-
-### Admonitions
-
-Use admonitions for important information:
-
-```rst
-.. note::
-   This is a note.
-
-.. warning::
-   This is a warning.
-
-.. tip::
-   This is a tip.
-```
-
-### Including External Files
-
-Include code files directly:
-
-```rst
-.. literalinclude:: ../src/example.py
-   :language: python
-   :lines: 10-20
-```
-
-## 🌐 Publishing Documentation
-
-### GitHub Pages
-
-To publish on GitHub Pages:
-
-1. **Build documentation**: `make html`
-2. **Copy to gh-pages branch**:
-    ```bash
-    git checkout gh-pages
-    cp -r _build/html/* .
-    git add .
-    git commit -m "Update documentation"
-    git push origin gh-pages
-    ```
-
-### Read the Docs
-
-To publish on [Read the Docs](https://about.readthedocs.com/):
-
-1. **Connect your GitHub repository** to Read the Docs
-2. **Configure build settings**:
-    - Python version: 3.8+
-    - Requirements file: `docs/requirements.txt`
-    - Documentation type: Sphinx
-3. **Build automatically** on every commit
-
-### Netlify
-
-For Netlify deployment:
-
-```bash
-# Build command
-cd docs && make html
-
-# Publish directory
-docs/_build/html
-```
-
-## 📊 Documentation Analytics
-
-### Link Checking
-
-Check for broken links:
-
-```bash
-make linkcheck
-```
-
-### Coverage Reports
-
-Generate documentation coverage reports:
-
-```bash
-sphinx-build -b coverage . _build/coverage
-```
-
-## 🐛 Troubleshooting
-
-### Common Issues
-
-**Sphinx not found:**
-
-```bash
-pip install sphinx sphinx-rtd-theme
-```
-
-**Module import errors:**
-
-```bash
-# Ensure source code is in Python path
-export PYTHONPATH="${PYTHONPATH}:../src"
-```
-
-**Missing dependencies:**
-
-```bash
-pip install -r docs/requirements.txt
-```
-
-**Build errors:**
-
-```bash
-# Clean build directory
-make clean
-
-# Rebuild from scratch
-make all
-```
-
-### Build Warnings
-
-Common warnings and fixes:
-
--   **"document isn't included in any toctree"**: Add file to `index.rst` toctree
--   **"undefined label"**: Check cross-reference syntax
--   **"duplicate target name"**: Ensure unique section headers
-
-## 📚 Resources
-
--   [Sphinx Documentation](https://www.sphinx-doc.org/en/master/)
--   [Read the Docs Theme](https://sphinx-rtd-theme.readthedocs.io/en/stable/)
--   [MyST Parser](https://myst-parser.readthedocs.io/en/latest/) (Markdown support)
--   [reStructuredText Primer](https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html)
--   [Sphinx Extensions](https://www.sphinx-doc.org/en/master/usage/extensions/index.html)
-
-## 🤝 Contributing to Documentation
-
-1. **Follow the style guide** for consistency
-2. **Test your changes** with `make html`
-3. **Check for broken links** with `make check`
-4. **Update API documentation** when adding new code
-5. **Include examples** for new features
-
-For detailed contribution guidelines, see [CONTRIBUTING.md](CONTRIBUTING.md).
+See the [Contributing Guide](CONTRIBUTING.md) for complete development and contribution guidelines.
