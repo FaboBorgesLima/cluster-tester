@@ -4,7 +4,7 @@ MicroK8s is a lightweight Kubernetes distribution that's perfect for development
 
 ## Prerequisites
 
-See [Prerequisites](prerequesites.md) for detailed requirements.
+See [Prerequisites](prerequisites.md) for detailed requirements.
 
 ## Installation
 

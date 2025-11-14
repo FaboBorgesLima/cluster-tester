@@ -4,7 +4,7 @@ K0s is a zero-friction Kubernetes distribution that works on any Linux without a
 
 ## Prerequisites
 
-See [Prerequisites](prerequesites.md) for detailed requirements.
+See [Prerequisites](prerequisites.md) for detailed requirements.
 
 ## Single-Node Setup (Controller + Worker)
 

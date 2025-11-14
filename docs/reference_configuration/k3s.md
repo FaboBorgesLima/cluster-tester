@@ -4,7 +4,7 @@ K3s is a lightweight Kubernetes distribution designed for IoT and edge computing
 
 ## Prerequisites
 
-See [Prerequisites](prerequesites.md) for detailed requirements.
+See [Prerequisites](prerequisites.md) for detailed requirements.
 
 ## Single-Node Setup
 
