@@ -4,14 +4,7 @@ K0s is a zero-friction Kubernetes distribution that works on any Linux without a
 
 ## Prerequisites
 
--   Linux distribution (Ubuntu, CentOS, RHEL, etc.)
--   At least 1GB R# Test endpoints
-    curl "http://${EXTERNAL_IP}/"
-curl "http://${EXTERNAL_IP}/fibonacci/10"
-    curl "http://${EXTERNAL_IP}/bubble-sort?n=1024"or controller
--   At least 512MB RAM for worker nodes
--   Root or sudo access
--   Network connectivity between nodes
+See [Prerequisites](prerequesites.md) for detailed requirements.
 
 ## Single-Node Setup (Controller + Worker)
 

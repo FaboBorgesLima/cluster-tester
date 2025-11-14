@@ -4,10 +4,7 @@ MicroK8s is a lightweight Kubernetes distribution that's perfect for development
 
 ## Prerequisites
 
--   Ubuntu 18.04 or later
--   At least 4GB RAM
--   20GB disk space
--   Root or sudo access
+See [Prerequisites](prerequesites.md) for detailed requirements.
 
 ## Installation
 
@@ -57,17 +54,6 @@ microk8s kubectl get nodes
 microk8s kubectl get pods -A
 ```
 
-## Configure kubectl Access
-
-```bash
-# Create kubectl config
-microk8s kubectl config view --raw > ~/.kube/config
-
-# Or use microk8s alias
-echo 'alias kubectl="microk8s kubectl"' >> ~/.bashrc
-source ~/.bashrc
-```
-
 ## Enable Required Add-ons
 
 ### Enable MetalLB for LoadBalancer Services
@@ -78,25 +64,6 @@ microk8s enable metallb
 
 # You'll be prompted for an IP address range
 # Example: 192.168.1.240-192.168.1.250
-```
-
-### Enable Other Useful Add-ons
-
-```bash
-# Enable DNS (usually enabled by default)
-microk8s enable dns
-
-# Enable storage
-microk8s enable storage
-
-# Enable dashboard (optional)
-microk8s enable dashboard
-
-# Enable registry (optional)
-microk8s enable registry
-
-# List all available add-ons
-microk8s status
 ```
 
 ## Advanced Configuration
