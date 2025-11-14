@@ -14,9 +14,11 @@ EXAMPLES
 :maxdepth: 2
 :caption: Reference Configuration
 
+reference_configuration/prerequisites
 reference_configuration/k3s
 reference_configuration/k0s
 reference_configuration/microk8s
+
 ```
 
 ```{toctree}
