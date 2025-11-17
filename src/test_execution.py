@@ -94,6 +94,7 @@ class TestExecution:
         :return: A dictionary representation of the TestExecution.
         """
         return {
+            "load": self.get_load(),
             "total_span": self.total_span.to_json(),
             "span_making_requests": self.span_making_requests.to_json(),
             "test_case": self.test_case.to_json(),

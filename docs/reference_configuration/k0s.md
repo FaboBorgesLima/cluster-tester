@@ -189,7 +189,7 @@ kubectl get l2advertisements -n metallb-system
 
 ```bash
 # Deploy the cluster-tester application
-kubectl apply -f kubernetes/deploy.yaml
+kubectl apply -f microk8s kubectl apply -f https://raw.githubusercontent.com/faboborgeslima/cluster-tester/main/kubernetes/deploy.yaml
 
 # Check deployment status
 kubectl get deployments

@@ -156,7 +156,7 @@ kubectl logs -n metallb-system -l component=speaker
 
 ```bash
 # Deploy the cluster-tester application
-kubectl apply -f kubernetes/deploy.yaml
+kubectl apply -f microk8s kubectl apply -f https://raw.githubusercontent.com/faboborgeslima/cluster-tester/main/kubernetes/deploy.yaml
 
 # Monitor deployment
 kubectl get deployments -w

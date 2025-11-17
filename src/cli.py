@@ -6,28 +6,16 @@ from cluster_service import ClusterService
 from test_execution_service import TestExecutionService
 from json_storage_service import JsonStorageService
 from get_cluster_from_config import get_cluster_from_config
-from test_case import TestCase
+from test_case_factory import TestCaseFactory
 import logging
 from datetime import datetime
-
-logging.basicConfig(level=logging.INFO)
-def parse_test_case(app_url:str,test_case:str)->TestCase:
-    match test_case:
-        case "fibonacci":
-            from fibonacci_test import FibonacciTest
-            return FibonacciTest(application_base_url=app_url)
-        case "bubble-sort":
-            from bubble_sort_test import BubbleSortTest
-            return BubbleSortTest(application_base_url=app_url)
-        case _:
-            raise ValueError(f"Unknown test case: {test_case}. Supported cases are: fibonacci, bubble-sort.")
 
 async def main():
     parser = argparse.ArgumentParser(description="Run the benchmark service.")
     
     path = '/'.join(__file__.split('/')[0:-1])
 
-    parser.add_argument('service', type=str, help='Service to run: benchmark, test-execution, data-analysis.')
+    parser.add_argument('service', type=str, help='Service to run: benchmark, test-execution, data-analysis and rerun-benchmark.')
     parser.add_argument('--storage', type=str, default=path+"/../db/", help='Path to the storage directory.')
     parser.add_argument('--config', type=str, default="config.json", help='Path to the configuration file.')
     parser.add_argument('--monitoring-interval', type=float, default=0.5, help='Interval for monitoring in seconds.')
@@ -39,10 +27,10 @@ async def main():
     parser.add_argument('--rest-time', type=int, default=30, help='benchmark only: Rest time between tests in seconds.')
     parser.add_argument('--load', type=int, default=1, help='test-execution and data-analysis only: Load to apply during the test. For data-analysis, is the load to be compared.')
     parser.add_argument('--requests-per-second', type=int, default=1, help='test-execution only: Requests per second to apply during the test.')
-    parser.add_argument('--files', type=str, nargs='+', help='data-analysis only: List of benchmark files to analyze.')
+    parser.add_argument('--files', type=str, nargs='+', help='data-analysis: List of benchmark files to analyze | rerun-benchmark: List of benchmark files to rerun.')
     parser.add_argument('--alias-hosts', type=str, nargs='+', help='data-analysis only: List of alias hosts for comparison. example: 192.168.1.2:us-east,192.168.1.3:us-west')
     parser.add_argument('--benchmark-names', default=[], type=str, nargs='+', help='data-analysis only: List of benchmark names for comparison.')
-    parser.add_argument('analysis_type', type=str, nargs='?', help='data-analysis only: Type of analysis to perform: avg-response-time, ram-usage-load.')
+    parser.add_argument('analysis_type', type=str, nargs='?', help='data-analysis only: Type of analysis to perform: avg-response-time, ram-usage-load, cpu-usage, cpu-usage-compare, ram-usage-compare, response-time-compare.')
 
     args = parser.parse_args()
     service = args.service.lower()
@@ -58,7 +46,7 @@ async def main():
                 test_execution_service=TestExecutionService(cluster_service=cluster_service),
             )
             args = parser.parse_args()
-            test_cases = [parse_test_case(config_data['app']['url'], test_case) for test_case in args.test_cases]
+            test_cases = [TestCaseFactory.create_test_case(config_data['app']['url'], test_case) for test_case in args.test_cases]
 
             for test_case in test_cases:
                 print(f"Running benchmark for test case: {test_case.__class__.__name__}")
@@ -80,11 +68,35 @@ async def main():
                     file_name=file_name,
                     data=benchmark.to_json()  # Save the benchmark in a short JSON format
                 )
+        case "rerun-benchmark":
+            cluster = get_cluster_from_config(config_data)
+            cluster_service = ClusterService()
+            benchmark_service = BenchmarkService(
+                test_execution_service=TestExecutionService(cluster_service=cluster_service),
+            )
+            for file in args.files:
+                print(f"Rerunning benchmark from file: {file}")
+                benchmark_data = storage_service.load_benchmark_test_execution_params(file)
+                
+                benchmark = await benchmark_service.run_benchmark_with_test_execution_params(
+                    app_url=config_data['app']['url'],
+                    test_executions=benchmark_data,
+                    cluster=cluster,
+                    monitoring_interval=args.monitoring_interval,
+                    rest_time=args.rest_time
+                )
+                file_name = f"{benchmark.cluster.name}-{benchmark.test_case.get_name()}-{datetime.now().strftime('%Y%m%d_%H%M%S')}_rerun_benchmark.json"
+                print(f"Rerun benchmark completed. Saving results to {file_name} in {args.storage}") 
+                
+                storage_service.save(
+                    file_name=file_name,
+                    data=benchmark.to_json()  # Save the benchmark in a short JSON format
+                )
         case "test-execution":
             cluster = get_cluster_from_config(config_data)
             cluster_service = ClusterService()
             test_execution_service = TestExecutionService(cluster_service=cluster_service)
-            test_cases = [parse_test_case(config_data['app']['url'], test_case) for test_case in args.test_cases]
+            test_cases = [TestCaseFactory.create_test_case(config_data['app']['url'], test_case) for test_case in args.test_cases]
             if len(test_cases) != 1:
                 raise ValueError("Test execution service can only run one test case at a time.")
             test_case = test_cases[0]
@@ -234,6 +246,10 @@ async def main():
                     print(f"Gráfico de comparação de CPU salvo como {output_filename}")
 
                 case "ram-usage-compare":
+                    if args.load is None:
+                        raise ValueError("RAM usage comparison requires a load to be specified.")
+                    if args.files is None or len(args.files) < 1:
+                        raise ValueError("RAM usage comparison requires at least one benchmark file to compare.")
                     alias_hosts = {}
                     if args.alias_hosts:
                         for alias in args.alias_hosts:
@@ -310,6 +326,13 @@ async def main():
                     plt.savefig(output_filename, dpi=300)
                     print(f"Gráfico de comparação de RAM salvo como {output_filename}")
                 case "response-time-compare":
+                    
+                    if args.load is None:
+                        raise ValueError("Response time comparison requires a load to be specified.")
+                    
+                    if args.files is None or len(args.files) < 1:
+                        raise ValueError("Response time comparison requires at least one benchmark file to compare.")
+                    
                     response_time_data = data_analysis_service.response_time_compare(args.files, args.load, args.benchmark_names)
 
                     import matplotlib.pyplot as plt
@@ -381,10 +404,10 @@ async def main():
                     plt.savefig(output_filename, dpi=300, bbox_inches='tight')
                     print(f"Violin plot de tempos de resposta salvo como {output_filename}")
                 case _:
-                    raise ValueError(f"Unknown analysis type: {args.analysis_type}. Supported types are: avg-response-time, min-response-time, max-response-time.")
+                    raise ValueError(f"Unknown analysis type: {args.analysis_type}. Supported types are: avg-response-time, min-response-time, max-response-time, ram-usage, cpu-usage, cpu-usage-compare, ram-usage-compare, response-time-compare.")
 
         case _:
-            raise ValueError(f"Unknown service: {service}. Supported services are: benchmark, test-execution.")
+            raise ValueError(f"Unknown service: {service}. Supported services are: benchmark, test-execution, data-analysis, rerun-benchmark.")
 
 
 if __name__ == "__main__":

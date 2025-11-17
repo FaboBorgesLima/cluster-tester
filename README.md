@@ -44,7 +44,7 @@ The application provides a Node.js test server with computational endpoints:
 docker-compose up -d
 
 # Or deploy to Kubernetes
-kubectl apply -f kubernetes/deploy.yaml
+kubectl apply -f microk8s kubectl apply -f https://raw.githubusercontent.com/faboborgeslima/cluster-tester/main/kubernetes/deploy.yaml
 ```
 
 ### 3. Configuration

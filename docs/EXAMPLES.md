@@ -118,6 +118,18 @@ python3 src/ benchmark \
     --duration-per-test 60
 ```
 
+#### Rerun benchmarks with different configurations if needed
+
+this will run already collected test cases against a different configuration:
+
+```bash
+# Rerun K0s with K3s settings
+python3 src/ rerun-benchmark \
+    --config k3s-config.json \
+    --files k0s-*-benchmark.json \
+    --duration-per-test 60
+```
+
 #### Compare Results
 
 ```bash
@@ -126,7 +138,7 @@ python3 src/ data-analysis cpu-usage-compare \
     --files k3s-*-benchmark.json k0s-*-benchmark.json microk8s-*-benchmark.json \
     --load 15 \
     --benchmark-names K3s K0s MicroK8s \
-    --alias-hosts "10.0.1.10:master,10.0.1.11:worker1,10.0.1.12:worker2"
+    --alias-hosts 10.0.1.10:master 10.0.1.11:worker1 10.0.1.12:worker2
 
 # Compare RAM usage
 python3 src/ data-analysis ram-usage-compare \

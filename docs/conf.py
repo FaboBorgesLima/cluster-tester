@@ -10,7 +10,7 @@ sys.path.insert(0, os.path.abspath('../src'))
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'Cluster Tester'
-copyright = '2024, Cluster Tester Contributors'
+copyright = '2025, Cluster Tester Contributors'
 author = 'Cluster Tester Contributors'
 release = '1.0.0'
 

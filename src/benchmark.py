@@ -28,7 +28,8 @@ class Benchmark:
         """
         return {
             "test_executions": [execution.to_json() for execution in self.test_executions],
-            "test_case_name": self.test_case.get_name()
+            "test_case_name": self.test_case.get_name(),
+            "cluster": self.cluster.to_json()
         }
 
     def to_short_json(self) -> dict:

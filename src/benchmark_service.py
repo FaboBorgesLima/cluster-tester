@@ -1,16 +1,12 @@
 from test_execution_service import TestExecutionService
+from test_execution_params import TestExecutionParams
 from test_case import TestCase
 from benchmark import Benchmark
 import math
-from cluster_service import ClusterService
-from test_result import TestResult
-from test_execution import TestExecution
 from cluster import Cluster
 import logging
-import datetime
-import json
-import timespan
 import asyncio
+from test_case_factory import TestCaseFactory
 
 class BenchmarkService:
     def __init__(self, test_execution_service: TestExecutionService):
@@ -110,3 +106,32 @@ class BenchmarkService:
             )
 
         return Benchmark(test_executions=rerun_with_monitoring, test_case=test_case, cluster=cluster)
+
+    async def run_benchmark_with_test_execution_params(
+            self, 
+            app_url: str,
+            test_executions: list[TestExecutionParams],
+            cluster: Cluster,
+            monitoring_interval: float,
+            rest_time:int = 30
+        ) -> Benchmark:
+        
+        test_execution_results = []
+
+        test_case = None
+        for test_execution in test_executions:
+            await asyncio.sleep(rest_time) if rest_time > 0 else None
+
+            test_case = TestCaseFactory.create_test_case(app_url, test_execution.test_case_name)
+            result = await self.test_execution_service.execute_test_while_monitoring(
+                test_case=test_case,
+                load=test_execution.load,
+                request_per_second=test_execution.requests_per_second,
+                duration_seconds=test_execution.seconds_making_requests,
+                cluster=cluster,
+                monitoring_interval=monitoring_interval
+            )
+
+            test_execution_results.append(result)
+
+        return Benchmark(test_executions=test_execution_results, cluster=cluster,test_case=test_case)

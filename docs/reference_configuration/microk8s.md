@@ -12,13 +12,15 @@ See [Prerequisites](prerequisites.md) for detailed requirements.
 
 ```bash
 # Update package list
-sudo apt update
+apt update
 
 # Install snapd if not already installed
-sudo apt install snapd
+apt install snapd
+# install sudo if not present
+apt install sudo
 
 # Install core snap
-sudo snap install core
+snap install core
 ```
 
 ### Step 2: Install MicroK8s
@@ -29,6 +31,9 @@ sudo snap install microk8s --classic --channel=1.33
 
 # Add current user to microk8s group
 sudo usermod -a -G microk8s $USER
+
+# Refresh group membership
+su - $USER
 
 # Create kubectl config directory
 mkdir -p ~/.kube
@@ -116,7 +121,7 @@ microk8s join <main-node-ip>:25000/<token>
 
 ```bash
 # Deploy the cluster-tester application
-microk8s kubectl apply -f kubernetes/deploy.yaml
+microk8s kubectl apply -f https://raw.githubusercontent.com/faboborgeslima/cluster-tester/main/kubernetes/deploy.yaml
 
 # Check deployment
 microk8s kubectl get deployments

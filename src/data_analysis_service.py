@@ -1,6 +1,7 @@
 from json_storage_service import JsonStorageService
 import matplotlib as plt 
 from datetime import datetime
+import logging
 
 class DataAnalysisService:
     def __init__(self, storage_service: JsonStorageService):

@@ -25,5 +25,10 @@ class Cluster:
         """
         return {
             "name": self.name,
-            "servers": len(self.servers)
+            "servers": [self._server_to_json(server) for server in self.servers],
+        }
+    
+    def _server_to_json(self, server: server_system_monitor.Monitor) -> dict:
+        return {
+            "host": server.connection.get_hostname(),
         }
